@@ -1,0 +1,29 @@
+{
+  "name": "cloudflare-cli",
+  "module": "index.ts",
+  "type": "module",
+  "bin": {
+    "cf": "./cli.ts"
+  },
+  "scripts": {
+    "dev": "bunli dev",
+    "build": "bunli build",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.10",
+    "@types/bun": "^1.3.11",
+    "lefthook": "^2.1.5"
+  },
+  "peerDependencies": {
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@bunli/core": "^0.9.0",
+    "cloudflare": "^5.2.0",
+    "zod": "^3.25.0-beta.20250519T094321"
+  }
+}
