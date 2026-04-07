@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 import { createCLI } from '@bunli/core'
 import authGroup from './commands/auth.ts'
+import zonesGroup from './commands/zones.ts'
 
 const cli = await createCLI({
   name: 'cf',
@@ -9,5 +10,6 @@ const cli = await createCLI({
 })
 
 cli.command(authGroup)
+cli.command(zonesGroup)
 
 await cli.run()
