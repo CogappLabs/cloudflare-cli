@@ -3,6 +3,7 @@ import { createCLI } from '@bunli/core'
 import analyticsGroup from './commands/analytics.ts'
 import authGroup from './commands/auth.ts'
 import dnsGroup from './commands/dns.ts'
+import securityGroup from './commands/security.ts'
 import zonesGroup from './commands/zones.ts'
 
 const cli = await createCLI({
@@ -15,5 +16,6 @@ cli.command(authGroup)
 cli.command(zonesGroup)
 cli.command(dnsGroup)
 cli.command(analyticsGroup)
+cli.command(securityGroup)
 
 await cli.run()
