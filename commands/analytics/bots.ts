@@ -3,12 +3,12 @@ import { z } from 'zod/v4'
 import { graphqlQuery } from '../../src/graphql.ts'
 import { output } from '../../src/output.ts'
 
-interface BotData {
+interface ThreatData {
   viewer: {
     zones: Array<{
-      httpRequests1dGroups: Array<{
-        dimensions: { botManagementDecision: string }
-        sum: { requests: number }
+      firewallEventsAdaptive: Array<{
+        action: string
+        source: string
       }>
     }>
   }
@@ -16,15 +16,14 @@ interface BotData {
 
 export default defineCommand({
   name: 'bots',
-  description: 'Bot score distribution for a zone',
+  description: 'Threat/bot summary — actions and sources',
   options: {
     zone: option(z.string(), {
       description: 'Zone ID',
       short: 'z',
     }),
-    days: option(z.coerce.number().default(7), {
-      description: 'Number of days to look back (default: 7)',
-      short: 'd',
+    hours: option(z.coerce.number().default(23), {
+      description: 'Hours to look back (default: 23, max: 23)',
     }),
     json: option(z.coerce.boolean().default(false), {
       description: 'Output as JSON',
@@ -32,30 +31,38 @@ export default defineCommand({
     }),
   },
   handler: async ({ flags }) => {
-    const since = new Date()
-    since.setDate(since.getDate() - flags.days)
-    const sinceStr = since.toISOString().split('T')[0]
+    const since = new Date(
+      Date.now() - flags.hours * 60 * 60 * 1000,
+    ).toISOString()
 
-    const data = await graphqlQuery<BotData>(
+    const data = await graphqlQuery<ThreatData>(
       `query ($zoneTag: string!, $since: string!) {
         viewer {
           zones(filter: { zoneTag: $zoneTag }) {
-            httpRequests1dGroups(limit: 100, filter: { date_geq: $since }) {
-              dimensions { botManagementDecision }
-              sum { requests }
+            firewallEventsAdaptive(
+              limit: 10000
+              filter: { datetime_geq: $since }
+              orderBy: [datetime_DESC]
+            ) {
+              action
+              source
             }
           }
         }
       }`,
-      { zoneTag: flags.zone, since: sinceStr },
+      { zoneTag: flags.zone, since },
     )
 
-    const rows = (data.viewer.zones[0]?.httpRequests1dGroups ?? []).map(
-      (g) => ({
-        classification: g.dimensions.botManagementDecision,
-        requests: g.sum.requests,
-      }),
-    )
+    const events = data.viewer.zones[0]?.firewallEventsAdaptive ?? []
+    const totals: Record<string, number> = {}
+    for (const e of events) {
+      const key = `${e.action} (${e.source})`
+      totals[key] = (totals[key] ?? 0) + 1
+    }
+
+    const rows = Object.entries(totals)
+      .map(([actionSource, count]) => ({ actionSource, count }))
+      .sort((a, b) => b.count - a.count)
 
     output(rows, flags.json)
   },

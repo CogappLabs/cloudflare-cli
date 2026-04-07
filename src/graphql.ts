@@ -1,15 +1,4 @@
-import { readFileSync } from 'node:fs'
-import { homedir } from 'node:os'
-import { join } from 'node:path'
-
-const TOKEN_PATH = join(homedir(), '.config', 'cf-cli', 'token.json')
-
-function getToken(): string {
-  const content = readFileSync(TOKEN_PATH, 'utf-8')
-  const data = JSON.parse(content)
-  if (!data.apiToken) throw new Error('No API token configured.')
-  return data.apiToken
-}
+import { getToken } from './auth.ts'
 
 export async function graphqlQuery<T>(
   query: string,

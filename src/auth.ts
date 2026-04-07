@@ -13,10 +13,12 @@ function ensureConfigDir() {
 }
 
 function loadToken(): string | null {
-  if (!existsSync(TOKEN_PATH)) return null
-  const content = readFileSync(TOKEN_PATH, 'utf-8')
-  const data = JSON.parse(content)
-  return data.apiToken ?? null
+  if (existsSync(TOKEN_PATH)) {
+    const content = readFileSync(TOKEN_PATH, 'utf-8')
+    const data = JSON.parse(content)
+    if (data.apiToken) return data.apiToken
+  }
+  return process.env.CF_API_KEY ?? null
 }
 
 export function saveToken(apiToken: string) {
@@ -25,14 +27,7 @@ export function saveToken(apiToken: string) {
 }
 
 export function getClient(): Cloudflare {
-  const token = loadToken()
-  if (!token) {
-    throw new Error(
-      'No API token configured.\n' +
-        'Run `cf auth login` to save your Cloudflare API token.',
-    )
-  }
-  return new Cloudflare({ apiToken: token })
+  return new Cloudflare({ apiToken: getToken() })
 }
 
 export async function verifyToken(): Promise<{
@@ -42,6 +37,17 @@ export async function verifyToken(): Promise<{
   const client = getClient()
   const result = await client.user.tokens.verify()
   return { valid: result.status === 'active', status: result.status }
+}
+
+export function getToken(): string {
+  const token = loadToken()
+  if (!token) {
+    throw new Error(
+      'No API token configured.\n' +
+        'Run `cf auth login`, set CF_API_KEY in .env, or export CF_API_KEY.',
+    )
+  }
+  return token
 }
 
 export function hasToken(): boolean {

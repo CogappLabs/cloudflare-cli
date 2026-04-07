@@ -1,11 +1,7 @@
-import { readFileSync } from 'node:fs'
-import { homedir } from 'node:os'
-import { join } from 'node:path'
 import { defineCommand, option } from '@bunli/core'
 import { z } from 'zod/v4'
+import { getToken } from '../../src/auth.ts'
 import { output } from '../../src/output.ts'
-
-const TOKEN_PATH = join(homedir(), '.config', 'cf-cli', 'token.json')
 
 const DEFAULT_FIELDS = [
   'ClientIP',
@@ -60,10 +56,7 @@ export default defineCommand({
     }),
   },
   handler: async ({ flags }) => {
-    const content = readFileSync(TOKEN_PATH, 'utf-8')
-    const { apiToken } = JSON.parse(content)
-    if (!apiToken)
-      throw new Error('No API token configured. Run `cf auth login`.')
+    const apiToken = getToken()
 
     const end = new Date()
     const start = new Date(end.getTime() - flags.minutes * 60 * 1000)
