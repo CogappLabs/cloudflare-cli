@@ -5,11 +5,14 @@ import { output } from '../../src/output.ts'
 
 export default defineCommand({
   name: 'rules',
-  description: 'List WAF/firewall rulesets',
+  description: 'List WAF/firewall rulesets, or show rules within a ruleset',
   options: {
     zone: option(z.string(), {
       description: 'Zone ID',
       short: 'z',
+    }),
+    id: option(z.string().optional(), {
+      description: 'Ruleset ID to show individual rules',
     }),
     json: option(z.coerce.boolean().default(false), {
       description: 'Output as JSON',
@@ -18,6 +21,22 @@ export default defineCommand({
   },
   handler: async ({ flags }) => {
     const client = getClient()
+
+    if (flags.id) {
+      const ruleset = await client.rulesets.get(flags.id, {
+        zone_id: flags.zone,
+      })
+      const rules = (ruleset.rules ?? []).map((r) => ({
+        id: r.id ?? '',
+        description: r.description ?? '',
+        action: r.action ?? '',
+        expression: r.expression ?? '',
+        enabled: r.enabled ?? false,
+      }))
+      output(rules, flags.json)
+      return
+    }
+
     const rulesets: Array<{
       id: string
       name: string
