@@ -14,10 +14,10 @@ const cli = await createCLI({
 })
 
 cli.command(authGroup)
-cli.command(zonesGroup)
-cli.command(dnsGroup)
 cli.command(analyticsGroup)
-cli.command(securityGroup)
+cli.command(dnsGroup)
 cli.command(logsGroup)
+cli.command(securityGroup)
+cli.command(zonesGroup)
 
 await cli.run()

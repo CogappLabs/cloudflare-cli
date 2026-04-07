@@ -114,7 +114,7 @@ export default defineCommand({
     }
     if (flags.path) {
       logs = logs.filter((l: Record<string, unknown>) =>
-        (l.ClientRequestURI as string)?.includes(flags.path!),
+        (l.ClientRequestURI as string)?.includes(flags.path ?? ''),
       )
     }
     if (flags.method) {
@@ -127,7 +127,7 @@ export default defineCommand({
       logs = logs.filter(
         (l: Record<string, unknown>) =>
           (l.BotScore as number) !== undefined &&
-          (l.BotScore as number) <= flags['bot-score']!,
+          (l.BotScore as number) <= (flags['bot-score'] ?? 0),
       )
     }
 
