@@ -35,8 +35,12 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 - `cf logs http -z <zone>` — HTTP request logs (Enterprise only)
 
 ### security (flag: `-z` zone)
-- `cf security events -z <zone>` — security/firewall events
+- `cf security events -z <zone>` — security/firewall events (includes userAgent)
+- `cf security allowed -z <zone>` — allowed-through traffic grouped by IP + user agent, ordered by request count (uses `httpRequestsAdaptiveGroups`)
 - `cf security rules -z <zone>` — list WAF/firewall rules
+
+### intel
+- `cf intel ip --ip <ipv4|ipv6>` — IP intelligence: threat risk types, ASN, country, infrastructure type (hosting_provider/isp/organization). Gets account ID from first zone.
 
 ### dns (flag: `-z` zone)
 - `cf dns list -z <zone>` — list DNS records

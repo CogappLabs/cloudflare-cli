@@ -76,7 +76,6 @@ export default defineCommand({
       filters.push('clientIP: $ip')
       vars.ip = flags.ip
     }
-
     const varDefs = [
       '$zoneTag: string!',
       '$since: string!',
@@ -121,6 +120,7 @@ export default defineCommand({
         ip: e.clientIP,
         method: e.clientRequestHTTPMethodName,
         path: e.clientRequestPath,
+        userAgent: e.userAgent,
         ruleId: e.ruleId,
       }),
     )
