@@ -4,23 +4,32 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 
 ## Setup
 
-1. Create a Cloudflare API token at https://dash.cloudflare.com/profile/api-tokens with these permissions:
+1. Go to https://dash.cloudflare.com/profile/api-tokens
+2. Click **Create Token** → **Create Custom Token**
+3. Name it something like "Read analytics and logs"
+4. Add these permissions (all **Read**):
 
    | Scope   | Permission             | Level |
    | ------- | ---------------------- | ----- |
-   | Zone    | Analytics              | Read  |
-   | Zone    | Logs                   | Read  |
+   | Account | Workers Observability  | Read  |
+   | Account | Intel                  | Read  |
+   | Account | Account Analytics      | Read  |
+   | Zone    | Zone WAF               | Read  |
    | Zone    | Zone                   | Read  |
    | Zone    | DNS                    | Read  |
+   | Zone    | Logs                   | Read  |
    | Zone    | Firewall Services      | Read  |
-   | Account | Account Analytics      | Read  |
-   | Account | Workers Observability  | Read  |
+   | Zone    | Analytics              | Read  |
 
-2. Save the token:
+5. Under **Zone Resources**, select **Include** → **All zones** (or specific zones)
+6. Click **Continue to summary** → **Create Token**
+7. Copy the token and save it:
 
    ```bash
    cf auth login
    ```
+
+   The token is stored at `~/.config/cf-cli/token.json`. Alternatively, set the `CF_API_KEY` environment variable.
 
 ## Commands
 
