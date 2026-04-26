@@ -49,6 +49,7 @@ cf logs http -z ZONE                   # HTTP request logs (Enterprise)
 cf security events -z ZONE             # Security/firewall events
 cf security allowed -z ZONE            # Allowed-through traffic (high volume first)
 cf security rules -z ZONE              # List WAF rulesets
+cf security rules -z ZONE --id RULESET # Show individual rules in a ruleset (rate limit rules include requests, period, characteristics)
 
 cf intel ip --ip 1.2.3.4               # IP intelligence (threat, ASN, geo)
 

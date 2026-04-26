@@ -26,13 +26,33 @@ export default defineCommand({
       const ruleset = await client.rulesets.get(flags.id, {
         zone_id: flags.zone,
       })
-      const rules = (ruleset.rules ?? []).map((r) => ({
-        id: r.id ?? '',
-        description: r.description ?? '',
-        action: r.action ?? '',
-        expression: r.expression ?? '',
-        enabled: r.enabled ?? false,
-      }))
+      const rules = (ruleset.rules ?? []).map((r) => {
+        const base = {
+          id: r.id ?? '',
+          description: r.description ?? '',
+          action: r.action ?? '',
+          expression: r.expression ?? '',
+          enabled: r.enabled ?? false,
+        }
+        const rl = (
+          r as {
+            ratelimit?: {
+              requests_per_period?: number
+              period?: number
+              characteristics?: string[]
+            }
+          }
+        ).ratelimit
+        if (rl) {
+          return {
+            ...base,
+            requests: rl.requests_per_period ?? '',
+            period: rl.period ? `${rl.period}s` : '',
+            characteristics: (rl.characteristics ?? []).join(', '),
+          }
+        }
+        return base
+      })
       output(rules, flags.json)
       return
     }
