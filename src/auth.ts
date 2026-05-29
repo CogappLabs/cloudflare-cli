@@ -44,7 +44,7 @@ export function getToken(): string {
   if (!token) {
     throw new Error(
       'No API token configured.\n' +
-        'Run `cf auth login`, set CF_API_KEY in .env, or export CF_API_KEY.',
+        'Run `cfa auth login`, set CF_API_KEY in .env, or export CF_API_KEY.',
     )
   }
   return token

@@ -2,6 +2,7 @@ import { defineCommand, option } from '@bunli/core'
 import { z } from 'zod/v4'
 import { graphqlQuery } from '../../src/graphql.ts'
 import { output } from '../../src/output.ts'
+import { resolveWindow } from '../../src/time.ts'
 
 interface HttpRequestsData {
   viewer: {
@@ -34,7 +35,14 @@ export default defineCommand({
       short: 'n',
     }),
     hours: option(z.coerce.number().default(23), {
-      description: 'Hours to look back (default: 23, max: 23)',
+      description: 'Hours to look back (default: 23). Ignored if --since set.',
+    }),
+    since: option(z.string().optional(), {
+      description:
+        'Window start: ISO ("2026-05-21T15:50Z"), date, relative ("2h", "30m"), or "now"',
+    }),
+    until: option(z.string().optional(), {
+      description: 'Window end (default: now). Same formats as --since.',
     }),
     ip: option(z.string().optional(), {
       description: 'Filter by client IP',
@@ -42,23 +50,33 @@ export default defineCommand({
     json: option(z.coerce.boolean().default(false), {
       description: 'Output as JSON',
       short: 'j',
+      argumentKind: 'flag',
     }),
   },
   handler: async ({ flags }) => {
-    const since = new Date(
-      Date.now() - flags.hours * 60 * 60 * 1000,
-    ).toISOString()
+    const { since, until } = resolveWindow({
+      since: flags.since,
+      until: flags.until,
+      hours: flags.since ? undefined : flags.hours,
+    })
 
     const filters: string[] = [
       'datetime_geq: $since',
+      'datetime_leq: $until',
       'edgeResponseStatus_lt: 403',
     ]
     const vars: Record<string, unknown> = {
       zoneTag: flags.zone,
       since,
+      until,
       limit: flags.limit,
     }
-    const varDefs = ['$zoneTag: string!', '$since: string!', '$limit: Int!']
+    const varDefs = [
+      '$zoneTag: string!',
+      '$since: string!',
+      '$until: string!',
+      '$limit: Int!',
+    ]
 
     if (flags.ip) {
       filters.push('clientIP: $ip')

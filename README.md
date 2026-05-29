@@ -26,7 +26,7 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 7. Copy the token and save it:
 
    ```bash
-   cf auth login
+   cfa auth login
    ```
 
    The token is stored at `~/.config/cf-cli/token.json`. Alternatively, set the `CF_API_KEY` environment variable.
@@ -34,27 +34,27 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 ## Commands
 
 ```
-cf auth login          # Save API token
-cf auth status         # Verify token
+cfa auth login          # Save API token
+cfa auth status         # Verify token
 
-cf zones list          # List all zones
-cf zones get -z ZONE   # Zone details
+cfa zones list          # List all zones
+cfa zones get -z ZONE   # Zone details
 
-cf analytics traffic -z ZONE           # HTTP request analytics
-cf analytics bots -z ZONE              # Bot score distribution
-cf analytics top -z ZONE --by ip       # Top N by dimension
+cfa analytics traffic -z ZONE           # HTTP request analytics
+cfa analytics bots -z ZONE              # Bot score distribution
+cfa analytics top -z ZONE --by ip       # Top N by dimension
 
-cf logs http -z ZONE                   # HTTP request logs (Enterprise)
+cfa logs http -z ZONE                   # HTTP request logs (Enterprise)
 
-cf security events -z ZONE             # Security/firewall events
-cf security allowed -z ZONE            # Allowed-through traffic (high volume first)
-cf security rules -z ZONE              # List WAF rulesets
-cf security rules -z ZONE --id RULESET # Show individual rules in a ruleset (rate limit rules include requests, period, characteristics)
+cfa security events -z ZONE             # Security/firewall events
+cfa security allowed -z ZONE            # Allowed-through traffic (high volume first)
+cfa security rules -z ZONE              # List WAF rulesets
+cfa security rules -z ZONE --id RULESET # Show individual rules in a ruleset (rate limit rules include requests, period, characteristics)
 
-cf intel ip --ip 1.2.3.4               # IP intelligence (threat, ASN, geo)
+cfa intel ip --ip 1.2.3.4               # IP intelligence (threat, ASN, geo)
 
-cf dns list -z ZONE                    # List DNS records
-cf dns get -z ZONE --id RECORD_ID      # Single record details
+cfa dns list -z ZONE                    # List DNS records
+cfa dns get -z ZONE --id RECORD_ID      # Single record details
 ```
 
 All commands support `--json` / `-j` for JSON output.

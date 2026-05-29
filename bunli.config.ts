@@ -1,7 +1,7 @@
 import { defineConfig } from '@bunli/core'
 
 export default defineConfig({
-  name: 'cf',
+  name: 'cfa',
   version: '0.1.0',
   commands: {
     directory: './commands',

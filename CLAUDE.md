@@ -19,33 +19,33 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 ## Command groups
 
 ### auth
-- `cf auth login` — prompt for API token
-- `cf auth status` — verify token and show status
+- `cfa auth login` — prompt for API token
+- `cfa auth status` — verify token and show status
 
 ### zones (flag: `-z` zone ID or domain)
-- `cf zones list` — list all zones
-- `cf zones get -z <zone>` — zone details and settings
+- `cfa zones list` — list all zones
+- `cfa zones get -z <zone>` — zone details and settings
 
 ### analytics (flag: `-z` zone)
-- `cf analytics traffic -z <zone>` — HTTP request analytics
-- `cf analytics bots -z <zone>` — bot score distribution
-- `cf analytics top -z <zone> --by <dimension>` — top N by dimension
+- `cfa analytics traffic -z <zone>` — HTTP request analytics
+- `cfa analytics bots -z <zone>` — bot score distribution
+- `cfa analytics top -z <zone> --by <dimension>` — top N by dimension
 
 ### logs (flag: `-z` zone)
-- `cf logs http -z <zone>` — HTTP request logs (Enterprise only)
+- `cfa logs http -z <zone>` — HTTP request logs (Enterprise only)
 
 ### security (flag: `-z` zone)
-- `cf security events -z <zone>` — security/firewall events (includes userAgent)
-- `cf security allowed -z <zone>` — allowed-through traffic grouped by IP + user agent, ordered by request count (uses `httpRequestsAdaptiveGroups`)
-- `cf security rules -z <zone>` — list WAF/firewall rulesets
-- `cf security rules -z <zone> --id <ruleset>` — show individual rules within a ruleset (ID, description, action, expression, enabled)
+- `cfa security events -z <zone>` — security/firewall events (includes userAgent)
+- `cfa security allowed -z <zone>` — allowed-through traffic grouped by IP + user agent, ordered by request count (uses `httpRequestsAdaptiveGroups`)
+- `cfa security rules -z <zone>` — list WAF/firewall rulesets
+- `cfa security rules -z <zone> --id <ruleset>` — show individual rules within a ruleset (ID, description, action, expression, enabled)
 
 ### intel
-- `cf intel ip --ip <ipv4|ipv6>` — IP intelligence: threat risk types, ASN, country, infrastructure type (hosting_provider/isp/organization). Gets account ID from first zone.
+- `cfa intel ip --ip <ipv4|ipv6>` — IP intelligence: threat risk types, ASN, country, infrastructure type (hosting_provider/isp/organization). Gets account ID from first zone.
 
 ### dns (flag: `-z` zone)
-- `cf dns list -z <zone>` — list DNS records
-- `cf dns get -z <zone> --id <record>` — single record details
+- `cfa dns list -z <zone>` — list DNS records
+- `cfa dns get -z <zone> --id <record>` — single record details
 
 All commands support `--json` / `-j`. All operations are read-only.
 

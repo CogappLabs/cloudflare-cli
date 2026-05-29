@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "bin": {
-    "cf": "./cli.ts"
+    "cfa": "./cli.ts"
   },
   "scripts": {
     "dev": "bunli dev",

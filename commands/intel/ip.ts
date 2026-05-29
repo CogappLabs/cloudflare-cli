@@ -14,6 +14,7 @@ export default defineCommand({
     json: option(z.coerce.boolean().default(false), {
       description: 'Output as JSON',
       short: 'j',
+      argumentKind: 'flag',
     }),
   },
   handler: async ({ flags }) => {

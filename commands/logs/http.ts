@@ -2,6 +2,7 @@ import { defineCommand, option } from '@bunli/core'
 import { z } from 'zod/v4'
 import { getToken } from '../../src/auth.ts'
 import { output } from '../../src/output.ts'
+import { resolveWindow } from '../../src/time.ts'
 
 const DEFAULT_FIELDS = [
   'ClientIP',
@@ -24,8 +25,15 @@ export default defineCommand({
       short: 'z',
     }),
     minutes: option(z.coerce.number().default(5), {
-      description: 'Minutes to look back (default: 5, max: 60)',
+      description: 'Minutes to look back (default: 5). Ignored if --since set.',
       short: 'm',
+    }),
+    since: option(z.string().optional(), {
+      description:
+        'Window start: ISO ("2026-05-21T15:50Z"), date, relative ("2h", "30m", "1d"), or "now". Logpull supports up to 7 days back.',
+    }),
+    until: option(z.string().optional(), {
+      description: 'Window end (default: now). Same formats as --since.',
     }),
     limit: option(z.coerce.number().default(100), {
       description: 'Number of results (default: 100)',
@@ -53,19 +61,23 @@ export default defineCommand({
     json: option(z.coerce.boolean().default(false), {
       description: 'Output as JSON',
       short: 'j',
+      argumentKind: 'flag',
     }),
   },
   handler: async ({ flags }) => {
     const apiToken = getToken()
 
-    const end = new Date()
-    const start = new Date(end.getTime() - flags.minutes * 60 * 1000)
+    const { since, until } = resolveWindow({
+      since: flags.since,
+      until: flags.until,
+      minutes: flags.since ? undefined : flags.minutes,
+    })
 
     const url = new URL(
       `https://api.cloudflare.com/client/v4/zones/${flags.zone}/logs/received`,
     )
-    url.searchParams.set('start', start.toISOString())
-    url.searchParams.set('end', end.toISOString())
+    url.searchParams.set('start', since)
+    url.searchParams.set('end', until)
     url.searchParams.set('fields', DEFAULT_FIELDS)
     url.searchParams.set('sample', '1')
     url.searchParams.set('count', String(flags.limit))
@@ -88,7 +100,6 @@ export default defineCommand({
       .filter(Boolean)
       .map((line) => JSON.parse(line))
 
-    // Post-fetch filters
     if (flags.ip) {
       logs = logs.filter(
         (l: Record<string, unknown>) => l.ClientIP === flags.ip,

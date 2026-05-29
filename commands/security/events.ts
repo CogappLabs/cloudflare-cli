@@ -2,6 +2,7 @@ import { defineCommand, option } from '@bunli/core'
 import { z } from 'zod/v4'
 import { graphqlQuery } from '../../src/graphql.ts'
 import { output } from '../../src/output.ts'
+import { resolveWindow } from '../../src/time.ts'
 
 interface SecurityEventsData {
   viewer: {
@@ -41,26 +42,37 @@ export default defineCommand({
       description: 'Filter by client IP',
     }),
     limit: option(z.coerce.number().default(25), {
-      description: 'Number of results (default: 25)',
+      description: 'Number of results (default: 25, max: 10000)',
       short: 'n',
     }),
     hours: option(z.coerce.number().default(24), {
-      description: 'Hours to look back (default: 24)',
+      description: 'Hours to look back (default: 24). Ignored if --since set.',
+    }),
+    since: option(z.string().optional(), {
+      description:
+        'Window start: ISO ("2026-05-21T15:50Z"), date, relative ("2h", "30m"), or "now"',
+    }),
+    until: option(z.string().optional(), {
+      description: 'Window end (default: now). Same formats as --since.',
     }),
     json: option(z.coerce.boolean().default(false), {
       description: 'Output as JSON',
       short: 'j',
+      argumentKind: 'flag',
     }),
   },
   handler: async ({ flags }) => {
-    const since = new Date(
-      Date.now() - flags.hours * 60 * 60 * 1000,
-    ).toISOString()
+    const { since, until } = resolveWindow({
+      since: flags.since,
+      until: flags.until,
+      hours: flags.since ? undefined : flags.hours,
+    })
 
-    const filters: string[] = ['datetime_geq: $since']
+    const filters: string[] = ['datetime_geq: $since', 'datetime_leq: $until']
     const vars: Record<string, unknown> = {
       zoneTag: flags.zone,
       since,
+      until,
       limit: flags.limit,
     }
 
@@ -79,6 +91,7 @@ export default defineCommand({
     const varDefs = [
       '$zoneTag: string!',
       '$since: string!',
+      '$until: string!',
       '$limit: Int!',
       flags.action ? '$action: string!' : '',
       flags.source ? '$source: string!' : '',

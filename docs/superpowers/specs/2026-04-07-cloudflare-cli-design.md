@@ -6,8 +6,8 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 
 - Config dir: `~/.config/cf-cli/`
 - `token.json` stores `{ "apiToken": "..." }`
-- `cf auth login` — prompts for API token, saves it
-- `cf auth status` — verifies token against Cloudflare's `/user/tokens/verify` endpoint
+- `cfa auth login` — prompts for API token, saves it
+- `cfa auth status` — verifies token against Cloudflare's `/user/tokens/verify` endpoint
 
 ### Required API Token Permissions
 
@@ -25,33 +25,33 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 
 ### auth
 
-- `cf auth login` — prompts for API token, saves to `~/.config/cf-cli/token.json`
-- `cf auth status` — verifies token and shows current auth state
+- `cfa auth login` — prompts for API token, saves to `~/.config/cf-cli/token.json`
+- `cfa auth status` — verifies token and shows current auth state
 
 ### zones (flag: `-z` zone ID or domain)
 
-- `cf zones list` — list all zones
-- `cf zones get -z <zone>` — zone details and settings
+- `cfa zones list` — list all zones
+- `cfa zones get -z <zone>` — zone details and settings
 
 ### analytics (flag: `-z` zone)
 
-- `cf analytics traffic -z <zone>` — HTTP request analytics (requests, bandwidth, threats, by time period)
-- `cf analytics bots -z <zone>` — bot score distribution, verified bot vs automated vs likely human
-- `cf analytics top -z <zone> --by <ip|ua|country|path>` — top N by dimension
+- `cfa analytics traffic -z <zone>` — HTTP request analytics (requests, bandwidth, threats, by time period)
+- `cfa analytics bots -z <zone>` — bot score distribution, verified bot vs automated vs likely human
+- `cfa analytics top -z <zone> --by <ip|ua|country|path>` — top N by dimension
 
 ### logs (flag: `-z` zone)
 
-- `cf logs http -z <zone>` — HTTP request logs with filters: `--ua`, `--ip`, `--bot-score`, `--threat-score`, `--status`, `--path`, `--method`, `--limit`
+- `cfa logs http -z <zone>` — HTTP request logs with filters: `--ua`, `--ip`, `--bot-score`, `--threat-score`, `--status`, `--path`, `--method`, `--limit`
 
 ### security (flag: `-z` zone)
 
-- `cf security events -z <zone>` — security events/firewall events with filters: `--action`, `--source`, `--ip`, `--limit`
-- `cf security rules -z <zone>` — list WAF/firewall rules
+- `cfa security events -z <zone>` — security events/firewall events with filters: `--action`, `--source`, `--ip`, `--limit`
+- `cfa security rules -z <zone>` — list WAF/firewall rules
 
 ### dns (flag: `-z` zone)
 
-- `cf dns list -z <zone>` — list DNS records
-- `cf dns get -z <zone> --id <record>` — single record details
+- `cfa dns list -z <zone>` — list DNS records
+- `cfa dns get -z <zone> --id <record>` — single record details
 
 ## Architecture
 
@@ -93,4 +93,4 @@ All commands support `--json` / `-j`. Default is human-readable table output.
 
 - All operations are read-only — enforced by API token scopes
 - Mirrors ga-cli patterns: command groups, API client wrappers in `src/`, shared output formatting
-- CLI name: `cf`, binary entry point: `cli.ts`
+- CLI name: `cfa` (renamed from `cf` to avoid clash with official Cloudflare `cf` npm CLI), binary entry point: `cli.ts`

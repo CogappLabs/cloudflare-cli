@@ -14,7 +14,7 @@ export default defineCommand({
 
     if (!hasToken()) {
       console.log(colors.yellow('Not authenticated.'))
-      console.log('Run `cf auth login` to save your Cloudflare API token.')
+      console.log('Run `cfa auth login` to save your Cloudflare API token.')
       return
     }
 
