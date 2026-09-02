@@ -62,7 +62,7 @@ command that hits a new API means updating that table.
 
 ## Tech stack
 
-- Runtime: Bun
+- Runtime: [Bun](https://bun.sh)
 - CLI framework: Bunli (@bunli/core)
 - Cloudflare API: cloudflare (official SDK)
 - Validation: Zod v4

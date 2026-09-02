@@ -4,6 +4,14 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 
 ## Install
 
+Needs [Bun](https://bun.sh). If you don't have it:
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+Then:
+
 ```bash
 git clone git@github.com:CogappLabs/cloudflare-cli.git
 cd cloudflare-cli
