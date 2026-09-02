@@ -16,6 +16,9 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 - `src/output.ts` — shared output formatting (table/JSON)
 - `bunli.config.ts` — CLI build config, targets darwin-arm64
 
+Installed with `bun link`, so `cfa` runs `cli.ts` from this repo directly and
+edits need no rebuild. `bun run cli.ts <args>` works without linking.
+
 ## Command groups
 
 ### auth

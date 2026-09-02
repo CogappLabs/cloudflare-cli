@@ -2,6 +2,33 @@
 
 Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone management.
 
+## Install
+
+```bash
+git clone git@github.com:CogappLabs/cloudflare-cli.git
+cd cloudflare-cli
+bun install
+```
+
+Then either put `cfa` on your PATH:
+
+```bash
+bun link
+```
+
+This symlinks `~/.bun/bin/cfa` to `cli.ts` in this repo, so edits take effect
+on the next run with no build step. The repo *is* the install: move or delete it
+and `cfa` breaks.
+
+Or skip the link and run it from the repo folder:
+
+```bash
+bun run cli.ts zones list
+```
+
+Both forms take the same arguments; substitute `bun run cli.ts` for `cfa` in
+every example below.
+
 ## Setup
 
 1. Go to https://dash.cloudflare.com/profile/api-tokens
