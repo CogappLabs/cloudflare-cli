@@ -53,6 +53,10 @@ All commands support `--json` / `-j`. All operations are read-only.
 
 API token stored at `~/.config/cf-cli/token.json`. Create a token at https://dash.cloudflare.com/profile/api-tokens with read-only permissions.
 
+Required scopes (all Read): Account Intel; Zone, DNS, Analytics, Zone WAF, Logs,
+Firewall Services. See the README table for which command needs which. Adding a
+command that hits a new API means updating that table.
+
 ## Tech stack
 
 - Runtime: Bun

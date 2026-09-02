@@ -9,17 +9,23 @@ Read-only CLI for Cloudflare analytics, logs, security events, DNS, and zone man
 3. Name it something like "Read analytics and logs"
 4. Add these permissions (all **Read**):
 
-   | Scope   | Permission             | Level |
-   | ------- | ---------------------- | ----- |
-   | Account | Workers Observability  | Read  |
-   | Account | Intel                  | Read  |
-   | Account | Account Analytics      | Read  |
-   | Zone    | Zone WAF               | Read  |
-   | Zone    | Zone                   | Read  |
-   | Zone    | DNS                    | Read  |
-   | Zone    | Logs                   | Read  |
-   | Zone    | Firewall Services      | Read  |
-   | Zone    | Analytics              | Read  |
+   | Scope   | Permission        | Level | Needed by                                             |
+   | ------- | ----------------- | ----- | ----------------------------------------------------- |
+   | Account | Intel             | Read  | `intel ip`                                            |
+   | Zone    | Zone              | Read  | `zones list`, `zones get`, `intel ip`                 |
+   | Zone    | DNS               | Read  | `dns list`, `dns get`                                 |
+   | Zone    | Analytics         | Read  | `analytics traffic`, `analytics top`, `security allowed` |
+   | Zone    | Zone WAF          | Read  | `security rules`                                      |
+   | Zone    | Logs              | Read  | `logs http`, `analytics bots`, `security events`      |
+   | Zone    | Firewall Services | Read  | `security events` (see note)                          |
+
+   `auth status` calls the token-verify endpoint, which any token can call on
+   itself, so it needs no permission of its own.
+
+   Firewall Services is not used by any REST call here (`security rules` uses
+   the modern Rulesets API, under Zone WAF). Cloudflare's GraphQL gating on the
+   `firewallEventsAdaptive` dataset is inconsistent, so it is kept to avoid a
+   confusing 403 on `analytics bots` / `security events`.
 
 5. Under **Zone Resources**, select **Include** → **All zones** (or specific zones)
 6. Click **Continue to summary** → **Create Token**
